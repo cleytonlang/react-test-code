@@ -1,0 +1,41 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.VectorCalculator {
+  display: grid;
+  gap: 10px
+}
+
+.Vectors {
+  display: grid;
+  gap: 10px
+}
+
+.Vector {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.Result {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.Buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.Buttons button {
+  width: 60px;
+  height: 60px;
+}
