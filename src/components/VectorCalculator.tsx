@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
@@ -12,6 +12,7 @@ const vectorOperation = (
     vectorB: Vector,
     operation: string
 ): Vector | null => {
+
     // Check if the inputs are valid vectors
     if (
         isNaN(vectorA.x) ||
@@ -21,6 +22,7 @@ const vectorOperation = (
     ) {
         return null;
     }
+
     // Perform the operation based on the button clicked
     switch (operation) {
         case "+":
@@ -57,6 +59,7 @@ const vectorOperation = (
             return null;
     }
 };
+
 // The VectorCalculator component
 const VectorCalculator: React.FC<{
     vectorA: Vector;
@@ -66,17 +69,21 @@ const VectorCalculator: React.FC<{
     const [vectorAState, setVectorAState] = useState(vectorA);
     const [vectorBState, setVectorBState] = useState(vectorB);
     const [resultState, setResultState] = useState<Vector | null>(null);
+
     // Use state hooks to store the error message and theoperation
     const [errorMessage, setErrorMessage] = useState("");
     const [operation, setOperation] = useState("");
+
     // A helper function to handle the change of vectorvalues
     const handleChange = (
         event: React.ChangeEvent<HTMLInputElement>,
         vector: string,
         coordinate: string
     ) => {
+
         // Get the new value from the event target
         const newValue = parseFloat(event.target.value);
+
         // Update the state of the vector based on the vector and coordinate
         if (vector === "A") {
             if (coordinate === "x") {
@@ -91,16 +98,8 @@ const VectorCalculator: React.FC<{
                 setVectorBState({ ...vectorBState, y: newValue });
             }
         }
-        // Perform the operation on the updated vectors and update the result state
-        const result = vectorOperation(vectorAState, vectorBState, operation);
-        setResultState(result);
-        // Check if the result is null and update the error message accordingly
-        if (result === null) {
-            setErrorMessage(`Invalid operation: ${operation}`);
-        } else {
-            setErrorMessage("");
-        }
     };
+
     // A helper function to handle the click of operation buttons
     const handleClick = (event:
         React.MouseEvent<HTMLButtonElement>) => {
@@ -108,6 +107,9 @@ const VectorCalculator: React.FC<{
         const operation = event.currentTarget.value;
         // Update the operation state
         setOperation(operation);
+    };
+
+    const processResult = () => {
         // Perform the operation on the vectors and update the result state
         const result = vectorOperation(vectorAState,
             vectorBState, operation);
@@ -122,12 +124,20 @@ const VectorCalculator: React.FC<{
         } else {
             setErrorMessage("");
         }
-    };
+    }
+
+    useEffect(() => {
+        if (operation !== "") {
+            processResult();
+        }
+    }, [operation, vectorAState, vectorBState]);
+
     // Return the JSX for the calculator UI
     return (
         <div className="VectorCalculator">
-            <h1>Test 1 - Vector Calculator</h1>
-            <div className="Vectors">
+            <h1 id="section-title">Test 1 - Vector Calculator</h1>
+
+            <section aria-labelledby="section-title" className="Vectors">
                 <div className="Vector">
                     <label htmlFor="vectoraX">A</label>
                     <TextField
@@ -136,7 +146,7 @@ const VectorCalculator: React.FC<{
                             type: 'number',
                             value: vectorAState.x,
                             'aria-label': 'Vector A X component',
-                            'aria-required': 'true'
+                            'aria-required': 'true',
                         }}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleChange(event, "A", "x")}
                     />
@@ -146,7 +156,7 @@ const VectorCalculator: React.FC<{
                             type: 'number',
                             value: vectorAState.y,
                             'aria-label': 'Vector A Y component',
-                            'aria-required': 'true'
+                            'aria-required': 'true',
                         }}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleChange(event, "A", "y")}
                     />
@@ -174,16 +184,17 @@ const VectorCalculator: React.FC<{
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleChange(event, "B", "y")}
                     />
                 </div>
-            </div>
-            <div className="Buttons">
+            </section>
+
+            <section aria-label="Operations" className="Buttons">
                 <Button variant="contained" onClick={handleClick} value="+" aria-label="Add vectors">+</Button>
                 <Button variant="contained" onClick={handleClick} value="-" aria-label="Subtract vectors">-</Button>
                 <Button variant="contained" onClick={handleClick} value="*" aria-label="Multiply vectors">*</Button>
                 <Button variant="contained" onClick={handleClick} value="/" aria-label="Divide vectors">/</Button>
-            </div>
+            </section>
 
-            {resultState && <strong>Result</strong>}
-            <div className="Result">
+            {resultState && <strong> Result using ({operation})</strong>}
+            <section aria-label="Result" className="Result">
                 {resultState ? (
                     <>
                         <TextField
@@ -216,7 +227,7 @@ const VectorCalculator: React.FC<{
                 ) : (
                     <span className="Error"> {errorMessage}</span>
                 )}
-            </div>
+            </section>
 
         </div>
     );
