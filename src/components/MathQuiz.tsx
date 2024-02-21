@@ -42,7 +42,8 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                 setQuizStatus("finished");
             }
         }
-    }, [questions, currentQuestion, quizStatus]);
+    }, []);
+    // }, [questions, currentQuestion, quizStatus]);
     // A helper function to handle the change of the user's answer
     const handleChange = (event:
         React.ChangeEvent<HTMLInputElement>) => {
@@ -96,7 +97,7 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
         <div className="MathQuiz">
             <h1>Test 2 - Math Quiz</h1>
             {quizStatus === "in progress" ? ( // If the quiz is in progress, display the question, the answer input, the feedback message, the score counter, and the buttons
-                <>
+                <section aria-label="Math Quiz" >
                     <div className="Question">
                         <p>{currentQuestion?.question}</p>
                         <form onSubmit={handleSubmit}>
@@ -124,11 +125,11 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                     </div>
                     <div className="Buttons">
                         <Button variant="contained" onClick={handleNext} disabled={feedbackMessage === ""} aria-label="Next">Next</Button>
-                        <Button variant="contained" onClick={handleNext} disabled={questions.length - score > 0} aria-label="Finish">Finish</Button>
+                        <Button variant="contained" onClick={handleFinish} disabled={questions.length - score > 0} aria-label="Finish">Finish</Button>
                     </div>
-                </>
+                </section>
             ) : ( // If the quiz is finished, display the final message
-                <div className="Final" >
+                <section aria-label="Final Message" className="Final" >
                     <p>You have completed the quiz!</p>
                     <p>Your total score is {score} out of
                         {questions.length}.</p>
@@ -136,7 +137,7 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                         Your percentage is {((score / questions.length)
                             * 100).toFixed(2)}%.
                     </p>
-                </div>
+                </section>
             )}
         </div >
     );
