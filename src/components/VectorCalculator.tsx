@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
-import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
 import TextField from "@mui/material/TextField";
 
 interface Vector {
@@ -149,12 +148,12 @@ const VectorCalculator: React.FC<{
 
             <strong>Result</strong>
             <div className="Result">
-                {resultState ? ( // If the result is not null, display the result vector
+                {resultState ? (
                     <>
                         <TextField inputProps={{ type: 'number', value: resultState.x }} aria-readonly />
                         <TextField inputProps={{ type: 'number', value: resultState.y }} aria-readonly />
                     </>
-                ) : ( // If the result is null, display the error message
+                ) : (
                     <span className="Error"> {errorMessage}</span>
                 )}
             </div>
