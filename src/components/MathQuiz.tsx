@@ -10,12 +10,10 @@ interface Question {
 
 const MathQuiz: React.FC<{ questions: Question[] }> = ({
     questions }) => {
-    // Use state hooks to store the current question, the user's answer, the feedback message, the score, and the quiz status
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [userAnswer, setUserAnswer] = useState("");
     const [userAnswers, setUserAnswers] = useState<string[]>([]);
-    const [feedbackMessage, setFeedbackMessage] =
-        useState("");
+    const [feedbackMessage, setFeedbackMessage] = useState("");
     const [score, setScore] = useState(0);
     const [quizStatus, setQuizStatus] = useState("in progress");
 
@@ -56,21 +54,20 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
     useEffect(() => {
         generateRandomQuestion()
     }, [questions]);
-    // }, [questions, currentQuestion, quizStatus]);
 
     // A helper function to handle the change of the user's answer
     const handleChange = (event:
         React.ChangeEvent<HTMLInputElement>) => {
-        // Get the new value from the event target
         const newValue = event.target.value;
         // Update the user's answer state
         setUserAnswer(newValue);
     };
+
     // A helper function to handle the submission of the user's answer
     const handleSubmit = (event:
         React.FormEvent<HTMLFormElement>) => {
-        // Prevent the default form behavior
         event.preventDefault();
+
         // Check if the user's answer is valid
         if (userAnswer !== "") {
             // Parse the user's answer as a number
@@ -98,21 +95,21 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
             setFeedbackMessage("Please enter an answer.");
         }
     };
+
     // A helper function to handle the click of the next button
     const handleNext = () => {
-        // Reset the user's answer state to an empty string
+        // Reset the user's answer state to an empty string, the feedback message and generate a new question
         setUserAnswer("");
-        // Reset the feedback message state to an empty string
         setFeedbackMessage("");
-
         generateRandomQuestion();
     };
+
     // A helper function to handle the click of the finish button
     const handleFinish = () => {
         // Set the quiz status to finished
         setQuizStatus("finished");
     };
-    // Return the JSX for the quiz UI
+
     return (
         <div className="MathQuiz">
             <h1>Test 2 - Math Quiz</h1>
@@ -144,7 +141,7 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                         </p>
                     </div>
                     <div className="Buttons">
-                        <Button variant="contained" onClick={handleNext} disabled={feedbackMessage === ""} aria-label="Next">Next</Button>
+                        <Button variant="contained" onClick={handleNext} disabled={questions.length === userAnswers.length} aria-label="Next">Next</Button>
                         <Button variant="contained" onClick={handleFinish} disabled={questions.length !== userAnswers.length} aria-label="Finish">Finish</Button>
                     </div>
                 </section>
