@@ -40,7 +40,7 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                 setCurrentQuestion(questionsCopy[randomIndex]);
             } else {
                 // Set the quiz status to finished
-                // setQuizStatus("finished");
+                setQuizStatus("finished");
             }
         }
     }, [questions, currentQuestion, quizStatus]);
@@ -124,19 +124,8 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                         </p>
                     </div>
                     <div className="Buttons">
-                        <Button variant="contained" onClick={handleNext} disabled={feedbackMessage === ""} aria-label="Submit">Next</Button>
-                        {/* <button onClick={handleNext}
-                            disabled={feedbackMessage === ""}>
-                            Next
-                        </button> */}
-
-                        <Button variant="contained" onClick={handleNext} disabled={questions.length - score > 0} aria-label="Submit">Finish</Button>
-                        {/* <button
-                            onClick={handleFinish}
-                            disabled={questions.length - score > 0}
-                        >
-                            Finish
-                        </button> */}
+                        <Button variant="contained" onClick={handleNext} disabled={feedbackMessage === ""} aria-label="Next">Next</Button>
+                        <Button variant="contained" onClick={handleNext} disabled={questions.length - score > 0} aria-label="Finish">Finish</Button>
                     </div>
                 </>
             ) : ( // If the quiz is finished, display the final message
