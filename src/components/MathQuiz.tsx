@@ -11,8 +11,7 @@ interface Question {
 const MathQuiz: React.FC<{ questions: Question[] }> = ({
     questions }) => {
     // Use state hooks to store the current question, the user's answer, the feedback message, the score, and the quiz status
-    const [currentQuestion, setCurrentQuestion] =
-        useState<Question | null>(null);
+    const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [userAnswer, setUserAnswer] = useState("");
     const [feedbackMessage, setFeedbackMessage] =
         useState("");
@@ -40,7 +39,7 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                 setCurrentQuestion(questionsCopy[randomIndex]);
             } else {
                 // Set the quiz status to finished
-                // setQuizStatus("finished");
+                setQuizStatus("finished");
             }
         }
     }, [questions, currentQuestion, quizStatus]);
