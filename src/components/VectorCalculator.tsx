@@ -63,12 +63,9 @@ const VectorCalculator: React.FC<{
     vectorB: Vector;
 }> = ({ vectorA, vectorB }) => {
     // Use state hooks to store the values of the vectors and the result
-    const [vectorAState, setVectorAState] =
-        useState(vectorA);
-    const [vectorBState, setVectorBState] =
-        useState(vectorB);
-    const [resultState, setResultState] = useState<Vector |
-        null>(null);
+    const [vectorAState, setVectorAState] = useState(vectorA);
+    const [vectorBState, setVectorBState] = useState(vectorB);
+    const [resultState, setResultState] = useState<Vector | null>(null);
     // Use state hooks to store the error message and theoperation
     const [errorMessage, setErrorMessage] = useState("");
     const [operation, setOperation] = useState("");
@@ -95,8 +92,7 @@ const VectorCalculator: React.FC<{
             }
         }
         // Perform the operation on the updated vectors and update the result state
-        const result = vectorOperation(vectorAState,
-            vectorBState, operation);
+        const result = vectorOperation(vectorAState, vectorBState, operation);
         setResultState(result);
         // Check if the result is null and update the error message accordingly
         if (result === null) {
@@ -118,7 +114,11 @@ const VectorCalculator: React.FC<{
         setResultState(result);
         // Check if the result is null and update the error message accordingly
         if (result === null) {
-            setErrorMessage(`Invalid operation: ${operation}`);
+            if (vectorBState.x === 0 || vectorBState.y === 0) {
+                setErrorMessage(`Cannot divide by zero`);
+            } else {
+                setErrorMessage(`Invalid operation: ${operation}`);
+            }
         } else {
             setErrorMessage("");
         }
@@ -126,32 +126,92 @@ const VectorCalculator: React.FC<{
     // Return the JSX for the calculator UI
     return (
         <div className="VectorCalculator">
-            <h1>Vector Calculator</h1>
+            <h1>Test 1 - Vector Calculator</h1>
             <div className="Vectors">
                 <div className="Vector">
                     <label htmlFor="vectoraX">A</label>
-                    <TextField inputProps={{ id: "vectoraX", type: 'number', value: vectorAState.x }} onChange={(event: any) => handleChange(event, "A", "x")} />
-                    <TextField inputProps={{ type: 'number', value: vectorAState.y }} onChange={(event: any) => handleChange(event, "A", "y")} />
+                    <TextField
+                        inputProps={{
+                            id: "vectoraX",
+                            type: 'number',
+                            value: vectorAState.x,
+                            'aria-label': 'Vector A X component',
+                            'aria-required': 'true'
+                        }}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleChange(event, "A", "x")}
+                    />
+                    <TextField
+                        inputProps={{
+                            id: "vectoraY",
+                            type: 'number',
+                            value: vectorAState.y,
+                            'aria-label': 'Vector A Y component',
+                            'aria-required': 'true'
+                        }}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleChange(event, "A", "y")}
+                    />
                 </div>
                 <div className="Vector">
                     <label htmlFor="vectorbX">B</label>
-                    <TextField inputProps={{ id: "vectorbX", type: 'number', value: vectorBState.x }} onChange={(event: any) => handleChange(event, "B", "x")} />
-                    <TextField inputProps={{ type: 'number', value: vectorBState.y }} onChange={(event: any) => handleChange(event, "B", "y")} />
+                    <TextField
+                        inputProps={{
+                            id: "vectorbX",
+                            type: 'number',
+                            value: vectorBState.x,
+                            'aria-label': 'Vector B X component',
+                            'aria-required': 'true'
+                        }}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleChange(event, "B", "x")}
+                    />
+                    <TextField
+                        inputProps={{
+                            id: "vectorbY",
+                            type: 'number',
+                            value: vectorBState.y,
+                            'aria-label': 'Vector B Y component',
+                            'aria-required': 'true'
+                        }}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleChange(event, "B", "y")}
+                    />
                 </div>
             </div>
             <div className="Buttons">
-                <Button variant="contained" onClick={handleClick} value="+">+</Button>
-                <Button variant="contained" onClick={handleClick} value="-">-</Button>
-                <Button variant="contained" onClick={handleClick} value="*">*</Button>
-                <Button variant="contained" onClick={handleClick} value="/">/</Button>
+                <Button variant="contained" onClick={handleClick} value="+" aria-label="Add vectors">+</Button>
+                <Button variant="contained" onClick={handleClick} value="-" aria-label="Subtract vectors">-</Button>
+                <Button variant="contained" onClick={handleClick} value="*" aria-label="Multiply vectors">*</Button>
+                <Button variant="contained" onClick={handleClick} value="/" aria-label="Divide vectors">/</Button>
             </div>
 
             {resultState && <strong>Result</strong>}
             <div className="Result">
                 {resultState ? (
                     <>
-                        <TextField inputProps={{ type: 'number', value: resultState.x }} aria-readonly />
-                        <TextField inputProps={{ type: 'number', value: resultState.y }} aria-readonly />
+                        <TextField
+                            inputProps={{
+                                type: 'number',
+                                value: resultState.x,
+                                readOnly: true,
+                                'aria-label': 'Result X component',
+                                'aria-readonly': 'true'
+                            }}
+                            InputLabelProps={{
+                                htmlFor: 'resultX'
+                            }}
+                            id="resultX"
+                        />
+                        <TextField
+                            inputProps={{
+                                type: 'number',
+                                value: resultState.y,
+                                readOnly: true,
+                                'aria-label': 'Result Y component',
+                                'aria-readonly': 'true'
+                            }}
+                            InputLabelProps={{
+                                htmlFor: 'resultY'
+                            }}
+                            id="resultY"
+                        />
                     </>
                 ) : (
                     <span className="Error"> {errorMessage}</span>
