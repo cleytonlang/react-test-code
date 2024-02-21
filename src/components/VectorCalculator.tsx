@@ -129,13 +129,13 @@ const VectorCalculator: React.FC<{
             <h1>Vector Calculator</h1>
             <div className="Vectors">
                 <div className="Vector">
-                    <label>A</label>
-                    <TextField inputProps={{ type: 'number', value: vectorAState.x }} onChange={(event: any) => handleChange(event, "A", "x")} />
+                    <label htmlFor="vectoraX">A</label>
+                    <TextField inputProps={{ id: "vectoraX", type: 'number', value: vectorAState.x }} onChange={(event: any) => handleChange(event, "A", "x")} />
                     <TextField inputProps={{ type: 'number', value: vectorAState.y }} onChange={(event: any) => handleChange(event, "A", "y")} />
                 </div>
                 <div className="Vector">
-                    <label>B</label>
-                    <TextField inputProps={{ type: 'number', value: vectorBState.x }} onChange={(event: any) => handleChange(event, "B", "x")} />
+                    <label htmlFor="vectorbX">B</label>
+                    <TextField inputProps={{ id: "vectorbX", type: 'number', value: vectorBState.x }} onChange={(event: any) => handleChange(event, "B", "x")} />
                     <TextField inputProps={{ type: 'number', value: vectorBState.y }} onChange={(event: any) => handleChange(event, "B", "y")} />
                 </div>
             </div>
@@ -146,7 +146,7 @@ const VectorCalculator: React.FC<{
                 <Button variant="contained" onClick={handleClick} value="/">/</Button>
             </div>
 
-            <strong>Result</strong>
+            {resultState && <strong>Result</strong>}
             <div className="Result">
                 {resultState ? (
                     <>
