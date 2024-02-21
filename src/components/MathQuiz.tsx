@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 interface Question {
     question: string;
@@ -17,7 +17,7 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
     const [score, setScore] = useState(0);
     const [quizStatus, setQuizStatus] = useState("in progress");
 
-    function generateRandomQuestion() {
+    const generateRandomQuestion = useCallback(() => {
         // Check if the quiz is still in progress
         if (quizStatus === "in progress") {
             // Create a copy of the questions array
@@ -25,15 +25,13 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
             // Filter out the current question from the copy
             if (currentQuestion) {
                 questionsCopy = questionsCopy.filter(
-                    (question) => question.question !==
-                        currentQuestion.question
+                    (question) => question.question !== currentQuestion.question
                 );
             }
             // Check if there are any questions left
             if (questionsCopy.length > 0) {
                 // Select a random index from the copy
-                const randomIndex = Math.floor(Math.random() *
-                    questionsCopy.length);
+                const randomIndex = Math.floor(Math.random() * questionsCopy.length);
 
                 const checkAnswerAlreadyGiven = userAnswers.filter((answer: string) => answer === questionsCopy[randomIndex].question);
 
@@ -43,72 +41,62 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                 } else {
                     generateRandomQuestion();
                 }
-
             } else {
                 // Set the quiz status to finished
                 setQuizStatus("finished");
             }
         }
-    }
+    }, [questions, currentQuestion, userAnswers, quizStatus, setCurrentQuestion, setQuizStatus]);
 
     useEffect(() => {
         generateRandomQuestion()
     }, [questions]);
 
     // A helper function to handle the change of the user's answer
-    const handleChange = (event:
-        React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = event.target.value;
-        // Update the user's answer state
-        setUserAnswer(newValue);
-    };
+    const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setUserAnswer(event.target.value);
+    }, [setUserAnswer]);
 
     // A helper function to handle the submission of the user's answer
-    const handleSubmit = (event:
-        React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
         // Check if the user's answer is valid
         if (userAnswer !== "") {
             // Parse the user's answer as a number
             const userAnswerNumber = parseFloat(userAnswer);
             // Check if the user's answer matches the current question's answer
-            if (userAnswerNumber === currentQuestion?.answer) {
+            if (currentQuestion && userAnswerNumber === currentQuestion.answer) {
                 // Update the feedback message state with a positive message
-                setFeedbackMessage(
-                    `Correct! That was a ${currentQuestion.difficulty} question.`
-                );
+                setFeedbackMessage(`Correct! That was a ${currentQuestion.difficulty} question.`);
                 // Update the score state by incrementing it by one
                 setScore(score + 1);
             } else {
                 // Update the feedback message state with a negative message
-                setFeedbackMessage(
-                    `Incorrect. The correct answer is ${currentQuestion?.answer}. That was a ${currentQuestion?.difficulty} question.`
-                );
+                setFeedbackMessage(`Incorrect. The correct answer is ${currentQuestion?.answer}. That was a ${currentQuestion?.difficulty} question.`);
             }
-
+            // Record the user's answer
             if (currentQuestion?.question) {
-                setUserAnswers([...userAnswers, currentQuestion?.question]);
+                setUserAnswers([...userAnswers, currentQuestion.question]);
             }
         } else {
             // Update the feedback message state with an error message
             setFeedbackMessage("Please enter an answer.");
         }
-    };
+    }, [userAnswer, currentQuestion, userAnswers, score, setFeedbackMessage, setScore, setUserAnswers]);
 
     // A helper function to handle the click of the next button
-    const handleNext = () => {
+    const handleNext = useCallback(() => {
         // Reset the user's answer state to an empty string, the feedback message and generate a new question
         setUserAnswer("");
         setFeedbackMessage("");
         generateRandomQuestion();
-    };
+    }, [setUserAnswer, setFeedbackMessage, generateRandomQuestion]);
 
     // A helper function to handle the click of the finish button
-    const handleFinish = () => {
+    const handleFinish = useCallback(() => {
         // Set the quiz status to finished
         setQuizStatus("finished");
-    };
+    }, [setQuizStatus]);
 
     return (
         <div className="MathQuiz">
