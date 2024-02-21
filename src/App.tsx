@@ -26,7 +26,8 @@ function App() {
   return (
     <>
       <VectorCalculator vectorA={{ x: 0, y: 0 }} vectorB={{ x: 0, y: 0 }} />
-      {/* <MathQuiz questions={questions} /> */}
+      <div class="separator"></div>
+      <MathQuiz questions={questions} />
     </>
   )
 }
