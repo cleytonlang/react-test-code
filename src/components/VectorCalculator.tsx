@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
@@ -75,56 +75,45 @@ const VectorCalculator: React.FC<{
     const [operation, setOperation] = useState("");
 
     // A helper function to handle the change of vectorvalues
-    const handleChange = (
-        event: React.ChangeEvent<HTMLInputElement>,
-        vector: string,
-        coordinate: string
-    ) => {
 
-        // Get the new value from the event target
-        const newValue = parseFloat(event.target.value);
+    const handleChange = useCallback(
+        (event: React.ChangeEvent<HTMLInputElement>, vector: string, coordinate: string) => {
+            // Get the new value from the event target
+            const newValue = parseFloat(event.target.value);
 
-        // Update the state of the vector based on the vector and coordinate
-        if (vector === "A") {
-            if (coordinate === "x") {
-                setVectorAState({ ...vectorAState, x: newValue });
-            } else if (coordinate === "y") {
-                setVectorAState({ ...vectorAState, y: newValue });
+            // Update the state of the vector based on the vector and coordinate
+            if (vector === 'A') {
+                setVectorAState(prevState => ({
+                    ...prevState,
+                    [coordinate]: newValue
+                }));
+            } else if (vector === 'B') {
+                setVectorBState(prevState => ({
+                    ...prevState,
+                    [coordinate]: newValue
+                }));
             }
-        } else if (vector === "B") {
-            if (coordinate === "x") {
-                setVectorBState({ ...vectorBState, x: newValue });
-            } else if (coordinate === "y") {
-                setVectorBState({ ...vectorBState, y: newValue });
-            }
-        }
-    };
+        },
+        [setVectorAState, setVectorBState]
+    );
 
     // A helper function to handle the click of operation buttons
-    const handleClick = (event:
-        React.MouseEvent<HTMLButtonElement>) => {
-        // Get the operation from the event target
+    const handleClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         const operation = event.currentTarget.value;
-        // Update the operation state
         setOperation(operation);
-    };
+    }, [setOperation]);
 
-    const processResult = () => {
+    const processResult = useCallback(() => {
         // Perform the operation on the vectors and update the result state
-        const result = vectorOperation(vectorAState,
-            vectorBState, operation);
+        const result = vectorOperation(vectorAState, vectorBState, operation);
         setResultState(result);
         // Check if the result is null and update the error message accordingly
         if (result === null) {
-            if (vectorBState.x === 0 || vectorBState.y === 0) {
-                setErrorMessage(`Cannot divide by zero`);
-            } else {
-                setErrorMessage(`Invalid operation: ${operation}`);
-            }
+            setErrorMessage('Operation failed with the given vectors');
         } else {
-            setErrorMessage("");
+            setErrorMessage('');
         }
-    }
+    }, [vectorAState, vectorBState, operation, setResultState, setErrorMessage]);
 
     useEffect(() => {
         if (operation !== "") {
