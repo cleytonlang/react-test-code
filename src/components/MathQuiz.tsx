@@ -40,7 +40,7 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                 setCurrentQuestion(questionsCopy[randomIndex]);
             } else {
                 // Set the quiz status to finished
-                setQuizStatus("finished");
+                // setQuizStatus("finished");
             }
         }
     }, [questions, currentQuestion, quizStatus]);

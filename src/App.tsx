@@ -12,15 +12,15 @@ function App() {
       answer: 3.14,
       difficulty: "Easy",
     },
-    // {
-    //   question: "What is the solution of $$x^2 - 5x + 6 = 0$$ ? ",
-    //   answer: -2,
-    //   difficulty: "Medium",
-    // },
-    // {
-    //   question: "What is the derivative of $$\\sin(x)$$?", answer: 0,
-    //   difficulty: "Hard",
-    // },
+    {
+      question: "What is the solution of $$x^2 - 5x + 6 = 0$$ ? ",
+      answer: -2,
+      difficulty: "Medium",
+    },
+    {
+      question: "What is the derivative of $$\\sin(x)$$?", answer: 0,
+      difficulty: "Hard",
+    },
   ];
 
   return (
