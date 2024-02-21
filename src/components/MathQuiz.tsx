@@ -13,12 +13,13 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
     // Use state hooks to store the current question, the user's answer, the feedback message, the score, and the quiz status
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [userAnswer, setUserAnswer] = useState("");
+    const [userAnswers, setUserAnswers] = useState<string[]>([]);
     const [feedbackMessage, setFeedbackMessage] =
         useState("");
     const [score, setScore] = useState(0);
     const [quizStatus, setQuizStatus] = useState("in progress");
-    // Use an effect hook to select a random question from the questions array when the component mounts or the user clicks on the next button
-    useEffect(() => {
+
+    function generateRandomQuestion() {
         // Check if the quiz is still in progress
         if (quizStatus === "in progress") {
             // Create a copy of the questions array
@@ -35,15 +36,28 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                 // Select a random index from the copy
                 const randomIndex = Math.floor(Math.random() *
                     questionsCopy.length);
-                // Set the current question to the question at the random index
-                setCurrentQuestion(questionsCopy[randomIndex]);
+
+                const checkAnswerAlreadyGiven = userAnswers.filter((answer: string) => answer === questionsCopy[randomIndex].question);
+
+                if (!checkAnswerAlreadyGiven.length) {
+                    // Set the current question to the question at the random index
+                    setCurrentQuestion(questionsCopy[randomIndex]);
+                } else {
+                    generateRandomQuestion();
+                }
+
             } else {
                 // Set the quiz status to finished
                 setQuizStatus("finished");
             }
         }
-    }, []);
+    }
+
+    useEffect(() => {
+        generateRandomQuestion()
+    }, [questions]);
     // }, [questions, currentQuestion, quizStatus]);
+
     // A helper function to handle the change of the user's answer
     const handleChange = (event:
         React.ChangeEvent<HTMLInputElement>) => {
@@ -75,6 +89,10 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                     `Incorrect. The correct answer is ${currentQuestion?.answer}. That was a ${currentQuestion?.difficulty} question.`
                 );
             }
+
+            if (currentQuestion?.question) {
+                setUserAnswers([...userAnswers, currentQuestion?.question]);
+            }
         } else {
             // Update the feedback message state with an error message
             setFeedbackMessage("Please enter an answer.");
@@ -86,6 +104,8 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
         setUserAnswer("");
         // Reset the feedback message state to an empty string
         setFeedbackMessage("");
+
+        generateRandomQuestion();
     };
     // A helper function to handle the click of the finish button
     const handleFinish = () => {
@@ -125,7 +145,7 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                     </div>
                     <div className="Buttons">
                         <Button variant="contained" onClick={handleNext} disabled={feedbackMessage === ""} aria-label="Next">Next</Button>
-                        <Button variant="contained" onClick={handleFinish} disabled={questions.length - score > 0} aria-label="Finish">Finish</Button>
+                        <Button variant="contained" onClick={handleFinish} disabled={questions.length !== userAnswers.length} aria-label="Finish">Finish</Button>
                     </div>
                 </section>
             ) : ( // If the quiz is finished, display the final message
@@ -139,6 +159,7 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                     </p>
                 </section>
             )}
+
         </div >
     );
 };
