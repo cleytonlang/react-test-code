@@ -44,7 +44,13 @@
   justify-content: center;
 }
 
-.Buttons button {
-  width: 60px;
-  height: 60px;
+button {
+  width: 55px;
+  height: 55px;
+}
+
+.Question form{
+  display:flex;
+  justify-content: center;
+  gap: 20px;
 }

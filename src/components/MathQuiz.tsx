@@ -1,3 +1,5 @@
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import React, { useState, useEffect } from "react";
 
 interface Question {
@@ -38,7 +40,7 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                 setCurrentQuestion(questionsCopy[randomIndex]);
             } else {
                 // Set the quiz status to finished
-                setQuizStatus("finished");
+                // setQuizStatus("finished");
             }
         }
     }, [questions, currentQuestion, quizStatus]);
@@ -99,13 +101,18 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                     <div className="Question">
                         <p>{currentQuestion?.question}</p>
                         <form onSubmit={handleSubmit}>
-                            <input
-                                type="number"
-                                value={userAnswer}
-                                onChange={handleChange}
+                            <TextField
+                                inputProps={{
+                                    id: "vectoraX",
+                                    type: 'number',
+                                    value: userAnswer,
+                                    'aria-label': 'Vector A X component',
+                                    'aria-required': 'true',
+                                }}
                                 placeholder="Enter your answer"
+                                onChange={handleChange}
                             />
-                            <button type="submit">Submit</button>
+                            <Button variant="contained" type="submit" aria-label="Submit">Submit</Button>
                         </form>
                     </div>
                     <div className="Feedback">
@@ -117,16 +124,19 @@ const MathQuiz: React.FC<{ questions: Question[] }> = ({
                         </p>
                     </div>
                     <div className="Buttons">
-                        <button onClick={handleNext}
+                        <Button variant="contained" onClick={handleNext} disabled={feedbackMessage === ""} aria-label="Submit">Next</Button>
+                        {/* <button onClick={handleNext}
                             disabled={feedbackMessage === ""}>
                             Next
-                        </button>
-                        <button
+                        </button> */}
+
+                        <Button variant="contained" onClick={handleNext} disabled={questions.length - score > 0} aria-label="Submit">Finish</Button>
+                        {/* <button
                             onClick={handleFinish}
                             disabled={questions.length - score > 0}
                         >
                             Finish
-                        </button>
+                        </button> */}
                     </div>
                 </>
             ) : ( // If the quiz is finished, display the final message
